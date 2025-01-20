@@ -108,7 +108,7 @@ export function TransferScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f9f9f9', padding: 16 },
     headerContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-    headerText: { color: '#007BFF', fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
+    headerText: { color: '#28a745', fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
     formContainer: {
         backgroundColor: '#ffffff',
         borderRadius: 10,
@@ -120,9 +120,9 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginTop: 80,
     },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: '#333', textAlign: 'center' },
+    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: '#28a745', textAlign: 'center' },
     input: { height: 50, borderColor: '#ddd', borderWidth: 1, borderRadius: 5, marginBottom: 16, paddingHorizontal: 10, fontSize: 16 },
-    button: { backgroundColor: '#007BFF', borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
+    button: { backgroundColor: '#28a745', borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
     disabledButton: { backgroundColor: '#ccc' },
     buttonText: { color: '#ffffff', fontSize: 18, fontWeight: 'bold' },
 });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from "@expo/vector-icons";
 
 
 export function WithdrawScreen({ route, navigation }) {
@@ -67,8 +68,17 @@ export function WithdrawScreen({ route, navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
+            {/* <View style={styles.header}>
                 <Text style={styles.headerText}>Withdraw Funds</Text>
+            </View> */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={24} color="#000" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Withdraw Funds</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+                    <Ionicons name="settings-outline" size={24} color="#000" />
+                </TouchableOpacity>
             </View>
             <View style={styles.form}>
                 <Text style={styles.label}>Amount</Text>
@@ -102,13 +112,15 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 20,
-        alignItems: 'center',
     },
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#007BFF',
+        color: '#28a745',
     },
     form: {
         backgroundColor: '#ffffff',
@@ -135,7 +147,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button: {
-        backgroundColor: '#007BFF',
+        backgroundColor: '#28a745',
         padding: 15,
         borderRadius: 5,
         alignItems: 'center',
@@ -153,7 +165,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cancelText: {
-        color: '#007BFF',
+        color: '#28a745',
         fontSize: 16,
         textDecorationLine: 'underline',
     },

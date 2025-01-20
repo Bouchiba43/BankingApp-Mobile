@@ -1,54 +1,59 @@
-// RechargeScreen.jsx
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    Alert,
+    StyleSheet,
+    TouchableOpacity,
+    SafeAreaView,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Ionicons} from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
-const RechargeScreen = ({ route,navigation }) => {
-    const { userDetails, setUserDetails } = route.params; // Détails utilisateur transmis via la navigation
-    const [rechargeCode, setRechargeCode] = useState(''); // État pour le code de recharge
-    const [modifiedUsers, setModifiedUsers] = useState([]);
+const RechargeScreen = ({ route, navigation }) => {
+    const { userDetails, setUserDetails } = route.params; // User details passed via navigation
+    const [rechargeAmount, setRechargeAmount] = useState(''); // State for the recharge amount
 
     const handleRecharge = async () => {
-        // Validation : vérifier si le code est bien de 14 chiffres
-        if (rechargeCode.length !== 14 || isNaN(rechargeCode)) {
-            Alert.alert('Erreur', 'Le code de recharge doit contenir exactement 14 chiffres.');
+        const amountToAdd = parseFloat(rechargeAmount);
+        if (isNaN(amountToAdd) || amountToAdd <= 0) {
+            Alert.alert('Erreur', 'Veuillez entrer un montant valide.');
             return;
         }
 
-        // Extraire les 4 derniers chiffres
-        const amountToAdd = parseInt(rechargeCode.slice(-4), 10);
-
         try {
-            // Récupérer les utilisateurs depuis AsyncStorage
             const usersData = await AsyncStorage.getItem('users');
             if (usersData) {
                 const users = JSON.parse(usersData);
 
-                // Trouver l'utilisateur actuel
                 const updatedUsers = users.map(user => {
                     if (user.id === userDetails.id) {
-                        user.balance = (parseFloat(user.balance) || 0) + amountToAdd; // Ajouter le montant à la balance
+                        user.balance = (parseFloat(user.balance) || 0) + amountToAdd;
+                        if (!user.transactions) user.transactions = [];
+                        user.transactions.push({
+                            id: Date.now(),
+                            type: 'Recharge',
+                            amount: amountToAdd,
+                            date: new Date().toISOString(),
+                        });
                     }
-                    if (!user.transactions) user.transactions = [];
-                    user.transactions.push({
-                        id: Date.now(), // Identifiant unique pour la transaction
-                        type: 'Recharge',
-                        amount: amountToAdd,
-                        date: new Date().toISOString(),
-                    });
-
                     return user;
                 });
 
-                // Mettre à jour AsyncStorage avec les nouvelles données
                 await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
 
-                // Mettre à jour l'état local
                 const updatedUser = updatedUsers.find(user => user.id === userDetails.id);
                 setUserDetails(updatedUser);
 
-                Alert.alert('Succès', `Votre balance a été rechargée de ${amountToAdd} $.`);
+                Alert.alert('Succès', `Votre balance a été rechargée de ${amountToAdd.toFixed(2)} $.`, [
+                    {
+                        text: 'OK',
+                        onPress: () =>
+                            navigation.navigate('HomeScreen', { userDetails: updatedUser }),
+                    },
+                ]);
             } else {
                 Alert.alert('Erreur', 'Aucun utilisateur trouvé.');
             }
@@ -57,17 +62,20 @@ const RechargeScreen = ({ route,navigation }) => {
             Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour de la balance.');
         }
 
-        // Réinitialiser le champ de saisie
-        setRechargeCode('');
+        setRechargeAmount('');
     };
+
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.headerContainer}>
+            <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="#007BFF" />
+                    <Ionicons name="arrow-back" size={24} color="#000" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Recharge Balance</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+                    <Ionicons name="settings-outline" size={24} color="#000" />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.formContainer}>
@@ -77,16 +85,14 @@ const RechargeScreen = ({ route,navigation }) => {
 
                 <TextInput
                     style={styles.input}
-                    placeholder="Entrez votre code de recharge"
+                    placeholder="Entrez le montant à recharger"
                     keyboardType="numeric"
-                    value={rechargeCode}
-                    onChangeText={setRechargeCode}
-                    maxLength={14} // Limiter à 14 caractères
+                    value={rechargeAmount}
+                    onChangeText={setRechargeAmount}
                 />
 
                 <Button title="Recharger" onPress={handleRecharge} />
             </View>
-
         </SafeAreaView>
     );
 };
@@ -94,7 +100,6 @@ const RechargeScreen = ({ route,navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
         backgroundColor: '#f5f5f5',
         padding: 20,
     },
@@ -103,8 +108,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    headerContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-    headerText: { color: '#007BFF', fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    headerText: {
+        color: '#28a745',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginLeft: 10,
+    },
     balanceText: {
         fontSize: 18,
         marginBottom: 20,

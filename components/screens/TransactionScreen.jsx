@@ -60,8 +60,8 @@ const TransactionScreen = ({ route, navigation }) => {
                 transfer
                   ? require("../../assets/send.png")
                   : recharge
-                  ? require("../../assets/receive.png")
-                  : require("../../assets/withdraw.png")
+                    ? require("../../assets/receive.png")
+                    : require("../../assets/withdraw.png")
               }
             />
             <Text style={styles.transactionType}>
@@ -84,11 +84,14 @@ const TransactionScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#007BFF" />
+          <Ionicons name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Transactions</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+          <Ionicons name="settings-outline" size={24} color="#000" />
+        </TouchableOpacity>
       </View>
       <Text style={styles.title}>Transactions</Text>
       <FlatList
@@ -104,6 +107,12 @@ const TransactionScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -131,8 +140,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerText: {
-    color: "#007BFF",
-    fontSize: 18,
+    color: "#28a745",
+    fontSize: 24,
     fontWeight: "bold",
     marginLeft: 10,
   },

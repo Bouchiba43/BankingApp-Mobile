@@ -20,7 +20,6 @@ export function PrepaidMobileScreen({ navigation, route }) {
 
     if (userDetails.balance < amount) {
         Alert.alert("Error", "Insufficient balance.");
-        return;
     }
 
     // Update user balance and transaction history
@@ -65,10 +64,13 @@ export function PrepaidMobileScreen({ navigation, route }) {
         <SafeAreaView style={styles.safeArea}>
             <ScrollView style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Ionicons name="arrow-back" size={24} color="#000" />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Mobile Prepaid</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+                        <Ionicons name="settings-outline" size={24} color="#000" />
+                    </TouchableOpacity>
                 </View>
 
                 {/* Operator Selection */}
@@ -115,7 +117,7 @@ export function PrepaidMobileScreen({ navigation, route }) {
                             <Text style={[
                                 styles.amountText,
                                 amount === amt && styles.amountTextSelected
-                            ]}>{amt}<Text style={styles.sup}>DT</Text></Text>
+                            ]}>${amt}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -145,9 +147,10 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 30,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
     },
     backButton: {
         padding: 10,

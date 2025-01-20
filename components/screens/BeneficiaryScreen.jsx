@@ -112,11 +112,14 @@ export function BeneficiaryScreen({ route, navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.headerContainer}>
+            <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="#007BFF" />
+                    <Ionicons name="arrow-back" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>Beneficiaries</Text>
+                <Text style={styles.headerText}>Beneficiary</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+                    <Ionicons name="settings-outline" size={24} color="#000" />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.searchContainer}>
@@ -159,8 +162,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         padding: 16,
     },
-    headerContainer: {
+    header: {
         flexDirection: "row",
+        justifyContent: "space-between",
         alignItems: "center",
         marginBottom: 20,
     },
