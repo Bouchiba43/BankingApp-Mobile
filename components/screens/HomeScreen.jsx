@@ -35,20 +35,43 @@ export function HomeScreen({ route, navigation }) {
     };
 
     fetchTransactions();
-  }, []);
+  }, [transactions]);
 
   const renderTransaction = ({ item }) => {
     const isPositive = item.type === "Recharge";
     const amountStyle = isPositive
       ? styles.positiveAmount
       : styles.negativeAmount;
+    const transfer = item.type === "Transfer";
+    const recharge = item.type === "Recharge";
 
     return (
       <View style={styles.transactionItem}>
-        <Text style={styles.transactionType}>{item.type}</Text>
-        <Text style={[styles.transactionAmount, amountStyle]}>
-          {isPositive ? `+${item.amount}` : `-${item.amount}`} $
-        </Text>
+        <View
+          style={styles.cardHeader}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image
+              style={styles.transactionIcon}
+              source={
+                transfer
+                  ? require("../../assets/send.png")
+                  : recharge
+                    ? require("../../assets/receive.png")
+                    : require("../../assets/withdraw.png")
+              }
+            />
+            <Text style={styles.transactionType}>
+              {item.type}
+              {item.type === "Transfer" && item.recipient
+                ? ` to ${item.recipient}`
+                : ""}
+            </Text>
+          </View>
+          <Text style={[styles.transactionAmount, amountStyle]}>
+            {isPositive ? `+${item.amount}` : `-${item.amount}`} $
+          </Text>
+        </View>
         <Text style={styles.transactionDate}>
           {new Date(item.date).toLocaleString()}
         </Text>
@@ -75,22 +98,6 @@ export function HomeScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Card section */}
-      {/* <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>{userDetails.name}</Text>
-          <Text style={styles.cardSubtitle}>Amazon Platinum</Text>
-          <View style={styles.cardDetails}>
-            <Text style={styles.cardNumber}>
-              **** **** **** {userDetails.phoneNumber.slice(-4)}
-            </Text>
-            <Text style={styles.cardBalance}>
-              ${userDetails.balance || "0.00"}
-            </Text>
-            <Text style={styles.cardType}>{userDetails.cardType}</Text>
-          </View>
-        </View>
-      </View> */}
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View>
@@ -143,10 +150,15 @@ export function HomeScreen({ route, navigation }) {
           {/* Button grid */}
           <View style={styles.buttonGrid}>
             {[
+              // {
+              //   title: "Account and Card",
+              //   icon: "card",
+              //   screen: "AccountScreen",
+              // },
               {
-                title: "Account and Card",
-                icon: "card",
-                screen: "AccountScreen",
+                title: "Credit card",
+                icon: "card-outline",
+                screen: "CardScreen",
               },
               {
                 title: "Withdraw",
@@ -154,19 +166,14 @@ export function HomeScreen({ route, navigation }) {
                 screen: "WithdrawScreen",
               },
               {
-                title: "Mobile prepaid",
-                icon: "phone-portrait",
-                screen: "PrepaidScreen",
-              },
-              {
-                title: "Credit card",
-                icon: "card-outline",
-                screen: "CreditCardScreen",
-              },
-              {
                 title: "Transactions",
                 icon: "file-tray-full",
                 screen: "TransactionScreen",
+              },
+              {
+                title: "Mobile prepaid",
+                icon: "phone-portrait",
+                screen: "PrepaidMobileScreen",
               },
               {
                 title: "Beneficiary",
@@ -184,24 +191,23 @@ export function HomeScreen({ route, navigation }) {
                   })
                 }
               >
-                <Ionicons name={item.icon} size={30} color="#3498db" />
+                <Ionicons name={item.icon} size={30} color="#28a745" />
                 <Text style={styles.buttonText}>{item.title}</Text>
               </TouchableOpacity>
             ))}
+            {/* Bouton Admin */}
+            {userDetails.isAdmin && (
+              <TouchableOpacity
+                style={[styles.button, styles.adminButton]}
+                onPress={() =>
+                  navigation.navigate("AdminScreen", { userDetails })
+                }
+              >
+                <Ionicons name="settings" size={30} color="#FF6347" />
+                <Text style={styles.buttonText}>Admin</Text>
+              </TouchableOpacity>
+            )}
           </View>
-
-          {/* Bouton Admin */}
-          {userDetails.isAdmin && (
-            <TouchableOpacity
-              style={[styles.button, styles.adminButton]}
-              onPress={() =>
-                navigation.navigate("AdminScreen", { userDetails })
-              }
-            >
-              <Ionicons name="settings" size={30} color="#FF6347" />
-              <Text style={styles.buttonText}>Admin</Text>
-            </TouchableOpacity>
-          )}
         </View>
 
         {/* Transaction history */}
@@ -257,6 +263,17 @@ export function HomeScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  transactionIcon: {
+    width: 25,
+    height: 25,
+    marginBottom: 10,
+    marginRight: 10,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   container: {
     padding: 14,
     backgroundColor: "#fff",
@@ -328,53 +345,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     color: "black",
   },
-  // mainContent: {
-  //   flex: 1,
-  //   paddingBottom: 60, // Adjust the bottom padding to avoid overlap with the nav
-  // },
-  // cardContainer: {
-  //   padding: 16,
-  //   marginBottom: 20,
-  // },
-  // card: {
-  //   backgroundColor: "#007BFF",
-  //   borderRadius: 10,
-  //   padding: 16,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowOpacity: 0.3,
-  //   shadowRadius: 3.84,
-  //   elevation: 5,
-  // },
-  // cardTitle: {
-  //   color: "#ffffff",
-  //   fontSize: 20,
-  //   fontWeight: "bold",
-  // },
-  // cardSubtitle: {
-  //   color: "#bbdefb",
-  //   fontSize: 16,
-  //   marginBottom: 10,
-  // },
-  // cardDetails: {
-  //   marginTop: 10,
-  // },
-  // cardNumber: {
-  //   color: "#ffffff",
-  //   fontSize: 16,
-  //   marginBottom: 5,
-  // },
-  // cardBalance: {
-  //   color: "#ffffff",
-  //   fontSize: 22,
-  //   fontWeight: "bold",
-  //   marginBottom: 5,
-  // },
-  // cardType: {
-  //   alignContent: "flex-end",
-  //   color: "#ffffff",
-  //   fontSize: 16,
-  // },
   seeAll: {
     color: "#2ecc71",
     fontSize: 16,
@@ -412,7 +382,7 @@ const styles = StyleSheet.create({
   buttonGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    gap: 15,
     paddingTop: 30,
   },
   button: {
@@ -446,7 +416,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     padding: 10,
-    backgroundColor: "#007BFF",
+    backgroundColor: "#28a745",
   },
   navButton: {
     alignItems: "center",

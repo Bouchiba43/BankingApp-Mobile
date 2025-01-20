@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -44,13 +45,36 @@ const TransactionScreen = ({ route, navigation }) => {
     const amountStyle = isPositive
       ? styles.positiveAmount
       : styles.negativeAmount;
+    const transfer = item.type === "Transfer";
+    const recharge = item.type === "Recharge";
 
     return (
       <View style={styles.transactionItem}>
-        <Text style={styles.transactionType}>{item.type}</Text>
-        <Text style={[styles.transactionAmount, amountStyle]}>
-          {isPositive ? `+${item.amount}` : `-${item.amount}`} $
-        </Text>
+        <View
+          style={styles.cardHeader}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image
+              style={styles.icon}
+              source={
+                transfer
+                  ? require("../../assets/send.png")
+                  : recharge
+                  ? require("../../assets/receive.png")
+                  : require("../../assets/withdraw.png")
+              }
+            />
+            <Text style={styles.transactionType}>
+              {item.type}
+              {item.type === "Transfer" && item.recipient
+                ? ` to ${item.recipient}`
+                : ""}
+            </Text>
+          </View>
+          <Text style={[styles.transactionAmount, amountStyle]}>
+            {isPositive ? `+${item.amount}` : `-${item.amount}`} $
+          </Text>
+        </View>
         <Text style={styles.transactionDate}>
           {new Date(item.date).toLocaleString()}
         </Text>
@@ -80,6 +104,17 @@ const TransactionScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  icon: {
+    width: 25,
+    height: 25,
+    marginBottom: 10,
+    marginRight: 10,
+  },
   container: {
     flex: 1,
     padding: 20,

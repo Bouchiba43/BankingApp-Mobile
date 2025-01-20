@@ -29,7 +29,7 @@ export function TransferScreen({ route, navigation }) {
             id: Date.now(), // Unique ID for the transaction
             type: 'Transfer',
             amount: transferAmount,
-            recipient,
+            recipient: recipient,
             date: new Date().toISOString(),
         };
 
