@@ -40,11 +40,11 @@ export function AdminScreen({ route, navigation }) {
     // Suppression d'un utilisateur et sauvegarde des modifications dans AsyncStorage
     const deleteUser = (id) => {
         Alert.alert(
-            "Supprimer l'utilisateur",
-            "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+            "Delete user",
+            "Do you want to delete the user ?",
             [
                 {
-                    text: "Annuler",
+                    text: "Cancel",
                     style: "cancel"
                 },
                 {
@@ -73,10 +73,10 @@ export function AdminScreen({ route, navigation }) {
                             onChangeText={text => updateUserDetails(user.id, 'name', text)}
                         />
 
-                        <Text style={styles.userBalance}>Numéro de téléphone: {user.phoneNumber}</Text>
+                        <Text style={styles.userBalance}>Phone number: {user.phoneNumber}</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Numéro de téléphone"
+                            placeholder="Phone number"
                             value={user.phoneNumber}
                             onChangeText={text => updateUserDetails(user.id, 'phoneNumber', text)}
                         />
@@ -90,13 +90,13 @@ export function AdminScreen({ route, navigation }) {
                             onChangeText={text => updateUserDetails(user.id, 'balance', text)}
                         />
 
-                        <Text style={styles.userBalance}>Statut: {user.isAdmin ? "Admin" : "Utilisateur"}</Text>
+                        <Text style={styles.userBalance}>Status: {user.isAdmin ? "Admin" : "Utilisateur"}</Text>
                         <TouchableOpacity
                             style={styles.input}
                             onPress={() => updateUserDetails(user.id, 'isAdmin', !user.isAdmin)}
                         >
                             <Text style={{ textAlign: 'center' }}>
-                                {user.isAdmin ? 'Retirer le statut Admin' : 'Donner le statut Admin'}
+                                {user.isAdmin ? 'Remove admin status' : 'Give admin status'}
                             </Text>
                         </TouchableOpacity>
 
@@ -104,7 +104,7 @@ export function AdminScreen({ route, navigation }) {
                             style={styles.deleteButton}
                             onPress={() => deleteUser(user.id)}
                         >
-                            <Text style={styles.deleteButtonText}>Supprimer l'utilisateur</Text>
+                            <Text style={styles.deleteButtonText}>Delete user</Text>
                         </TouchableOpacity>
                     </View>
                 ))}
@@ -114,7 +114,7 @@ export function AdminScreen({ route, navigation }) {
                 style={styles.saveButton}
                 onPress={() => navigation.goBack()}
             >
-                <Text style={styles.saveButtonText}>Enregistrer les modifications</Text>
+                <Text style={styles.saveButtonText}>Save changes</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
