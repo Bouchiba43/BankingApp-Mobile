@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Alert } from 'r
 import { Ionicons } from '@expo/vector-icons';
 
 export function ProfileScreen({ route, navigation }) {
+    // console.log("route params: ", route.params);
     const { userDetails } = route.params;
+    // console.log("user: ", userDetails);
 
     const handleLogout = () => {
         Alert.alert(

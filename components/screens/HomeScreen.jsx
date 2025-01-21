@@ -252,7 +252,7 @@ export function HomeScreen({ route, navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navButton}
-          onPress={() => navigation.navigate("SettingsScreen")}
+          onPress={() => navigation.navigate("SettingsScreen", { userDetails, setUserDetails })}
         >
           <Ionicons name="settings-outline" size={24} color="white" />
           <Text style={styles.navButtonText}>Settings</Text>
